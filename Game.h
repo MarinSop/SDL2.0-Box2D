@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "GraphicBody.h"
 #include "MyContactListener.h"
+#include "Map.h"
 class Game
 {
 public:
@@ -21,9 +22,10 @@ private:
 	b2World* _world;
 	b2Vec2 _gravity = b2Vec2(0.0f,1.0f);
 
+	Map* _map;
 	Player* _player;
-	PhysicBody _physicBody;
-	GraphicBody _graphicsBody;
+	//PhysicBody _physicBody;
+	//GraphicBody _graphicsBody;
 	MyContactListener* _contactListener;
 	void EventHandler(SDL_Window* window);
 };

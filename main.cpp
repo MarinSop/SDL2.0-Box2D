@@ -1,7 +1,6 @@
 #include "SDL.h"
-#include <iostream>
-#include "Box2D\box2d.h"
 #include "Game.h"
+
 
 #define M2P 30.0f
 #define P2M 1/M2P
@@ -23,6 +22,5 @@ int main(int argc, char* args[])
 	game.render(render);
 	SDL_RenderPresent(render);
 	}
-	
 	return EXIT_SUCCESS;
 }

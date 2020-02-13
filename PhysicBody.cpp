@@ -18,7 +18,7 @@ b2Body* PhysicBody::addRectBody(b2World* world, b2Vec2 pos, b2Vec2 size, BodyTyp
 	default:
 		break;
 	}
-	_bodyDef.position.Set(pos.x*P2M,pos.y*P2M);
+	_bodyDef.position.Set(pos.x*P2M+(size.x/2)*P2M,pos.y*P2M+(size.y/2)*P2M);
 	//creating body
 	_body = world->CreateBody(&_bodyDef);
 	//creating shape

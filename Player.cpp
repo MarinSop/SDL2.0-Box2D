@@ -9,9 +9,9 @@ Player::Player(b2World* world)
 	_graphicsBody.addGraphics(size, _physicBody.getBody()->GetPosition(), color);
 	_physicBody.getFixtureDef()->friction = 0.0f;
 	//creating foot sensor
-	_physicBody.addFixtureToBody(b2Vec2(size.x,10.0f),b2Vec2(30.0f,10.0f),true,NULL,NULL,NULL,(std::string*)"foot");
+	_physicBody.addFixtureToBody(b2Vec2(0.0f,30.0f),b2Vec2(size.x,15.0f),true,NULL,NULL,NULL,(std::string*)"foot");
 	rect.w = size.x;
-	rect.h = 10.0f;
+	rect.h = 15.0f;
 }
 
 Player::~Player()
@@ -29,7 +29,7 @@ void Player::draw(SDL_Renderer* render)
 	//drawing player body
 	_graphicsBody.setPhysicPosition(_physicBody.getBody()->GetPosition());
 	rect.x = _physicBody.getBody()->GetPosition().x * M2P - rect.w / 2.0f;
-	rect.y = _physicBody.getBody()->GetPosition().y * M2P - rect.h / 2.0f+30/2.0f;
+	rect.y = _physicBody.getBody()->GetPosition().y * M2P - rect.h / 2.0f + 30.0f /2.0f;
 	_graphicsBody.draw(render);
 	SDL_SetRenderDrawColor(render, 255, 0, 0, 255);
 	SDL_RenderFillRect(render, &rect);
