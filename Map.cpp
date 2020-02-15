@@ -10,7 +10,7 @@ Map::~Map()
       
 }
 
-bool Map::load(b2World* world)
+bool Map::load(b2World* world, SDL_Renderer* renderer)
 {
 	//loading tmx file
 	if (doc.LoadFile("maps\\level.tmx")) return XML_ERROR_FILE_READ_ERROR;
@@ -34,7 +34,7 @@ bool Map::load(b2World* world)
 		}
 		layer = layer->NextSiblingElement("layer");
 	}
-	std::cout << _backgroundStr << std::endl;
+
 	std::cout << _groundStr << std::endl;
 	XMLElement* objectgroup = map->FirstChildElement("objectgroup");
 	while (objectgroup != nullptr)
@@ -52,8 +52,8 @@ bool Map::load(b2World* world)
 				object->QueryFloatAttribute("y", &y);
 				object->QueryFloatAttribute("width", &w);
 				object->QueryFloatAttribute("height", &h);
-				_static.push_back(new Body(world, b2Vec2(x, y), b2Vec2(w, h), BodyType::Static, false, NULL, NULL, NULL, (std::string*)"ground",NULL));
-				std::cout << x << " " << y << " " << w << " " << h << std::endl;
+				_static.push_back(new Body(world, renderer, b2Vec2(x, y), b2Vec2(w, h), BodyType::Static, 
+					false, NULL, NULL, NULL, (std::string*)"ground",NULL,NULL));
 
 			}
 			else if (tmpStr == "Dynamic")
@@ -64,12 +64,15 @@ bool Map::load(b2World* world)
 				object->QueryFloatAttribute("width", &w);
 				object->QueryFloatAttribute("height", &h);
 				object->QueryFloatAttribute("gid", &id);
-				_dynamic.push_back(new Body(world, b2Vec2(x, y), b2Vec2(w, h), BodyType::Dynamic, false, NULL, NULL, NULL, (std::string*)"ground", id));
-				std::cout << x << " " << y << " " << w << " " << h << " " << id << std::endl;
+				_dynamic.push_back(new Body(world, renderer, b2Vec2(x, y), b2Vec2(w, h), BodyType::Dynamic,
+					false, NULL, NULL, NULL, (std::string*)"ground", id,"textures\\tilemap.png"));
 			}
 			object = object->NextSiblingElement("object");
 		}
 		objectgroup = objectgroup->NextSiblingElement("objectgroup");
+
+		_tilemap = new Tilemap(renderer,_mapSize.x,_mapSize.y,_tileSize.x,_tileSize.y,"textures\\tilemap.png",_groundStr);
+		_tilemap->create(renderer);
 	}
 
 	return true;
@@ -87,10 +90,7 @@ void Map::update()
 void Map::draw(SDL_Renderer* renderer)
 {
 	//drawing textures of bodies
-	for (int i = 0; i < _static.size(); i++)
-	{
-		_static[i]->draw(renderer);
-	}
+	_tilemap->draw(renderer);
 	for (int i = 0; i < _dynamic.size(); i++)
 	{
 		_dynamic[i]->draw(renderer);

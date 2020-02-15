@@ -1,18 +1,15 @@
 #include "Game.h"
 
-Game::Game()
+Game::Game(SDL_Renderer* renderer)
 {
 	isRunning = true;
 	_world = new b2World(_gravity);
 	_contactListener = new MyContactListener();
 	_world->SetContactListener(_contactListener);
-	_player = new Player(_world);
-	SDL_Point size = { 1000,10 };
-	SDL_Color color = { 0,255,0,255 };
-	//_physicBody.addRectBody(_world, b2Vec2(512.0f, 700.0f), b2Vec2(size.x, size.y), BodyType::Static,false,NULL,NULL,NULL,NULL);
-	//_graphicsBody.addGraphics(size, _physicBody.getBody()->GetPosition(), color);
+	_player = new Player(_world,renderer,"textures\\tilemap.png");
 	_map = new Map();
-	_map->load(_world);
+	_map->load(_world,renderer);
+	
 }
 
 	Game::~Game()
@@ -23,17 +20,18 @@ Game::Game()
 void Game::update(SDL_Window* window)
 {
 	EventHandler(window);
-	_world->Step(1/60.0f,6,3);
+	_world->Step(1/60.0f,8,3);
 	_player->update();
 	_map->update();
 }
 
 void Game::render(SDL_Renderer* renderer)
 {
-	_player->draw(renderer);
 	_map->draw(renderer);
-	//_graphicsBody.draw(renderer);
+	_player->draw(renderer);
+	
 }
+
 
 void Game::EventHandler(SDL_Window* window)
 {
