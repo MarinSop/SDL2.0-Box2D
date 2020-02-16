@@ -6,6 +6,7 @@
 #include "MyContactListener.h"
 #include "Map.h"
 #include "SDL_image.h"
+#include "MouseControls.h"
 class Game
 {
 public:
@@ -22,9 +23,12 @@ private:
 	b2World* _world;
 	b2Vec2 _gravity = b2Vec2(0.0f,2.0f);
 
+	bool hold = false;
+
 	Map* _map;
 	Player* _player;
 	MyContactListener* _contactListener;
+	MouseControls* _mouseControls;
 	void EventHandler(SDL_Window* window);
 };
 

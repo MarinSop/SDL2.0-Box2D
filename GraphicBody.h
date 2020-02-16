@@ -10,13 +10,14 @@ class GraphicBody
 {
 public:
 	void addGraphics(SDL_Renderer* renderer, SDL_Point size, b2Vec2 pos, SDL_Point tileSize, int id);
-	void setPhysicPosition(b2Vec2 pos);
+	void setPhysicPosition(b2Vec2 pos, float angle);
 	void draw(SDL_Renderer* render, SDL_Texture* tex);
+	SDL_Rect* getGamePos();
 private:
 
 	SDL_Rect* _gamePos = new SDL_Rect();
 	SDL_Rect* _tilePos = new SDL_Rect();
-	float angle = 0;
+	float _angle = 0;
 
 	b2Vec2 imageTilePos(int id);
 };

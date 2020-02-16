@@ -17,6 +17,7 @@ public:
 	bool load(b2World* world, SDL_Renderer* renderer);
 	void update();
 	void draw(SDL_Renderer* renderer);
+	std::vector<Body*> getDynamicBodies();
 
 private:
 	XMLDocument doc;

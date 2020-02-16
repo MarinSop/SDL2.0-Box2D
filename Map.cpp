@@ -65,7 +65,7 @@ bool Map::load(b2World* world, SDL_Renderer* renderer)
 				object->QueryFloatAttribute("height", &h);
 				object->QueryFloatAttribute("gid", &id);
 				_dynamic.push_back(new Body(world, renderer, b2Vec2(x, y), b2Vec2(w, h), BodyType::Dynamic,
-					false, NULL, NULL, NULL, (std::string*)"ground", id,"textures\\tilemap.png"));
+					false, NULL, 10, NULL, (std::string*)"ground", id,"textures\\tilemap.png"));
 			}
 			object = object->NextSiblingElement("object");
 		}
@@ -95,4 +95,9 @@ void Map::draw(SDL_Renderer* renderer)
 	{
 		_dynamic[i]->draw(renderer);
 	}
+}
+
+std::vector<Body*> Map::getDynamicBodies()
+{
+	return _dynamic;
 }

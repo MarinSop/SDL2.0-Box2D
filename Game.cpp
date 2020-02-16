@@ -9,6 +9,7 @@ Game::Game(SDL_Renderer* renderer)
 	_player = new Player(_world,renderer,"textures\\tilemap.png");
 	_map = new Map();
 	_map->load(_world,renderer);
+	_mouseControls = new MouseControls();
 	
 }
 
@@ -20,9 +21,14 @@ Game::Game(SDL_Renderer* renderer)
 void Game::update(SDL_Window* window)
 {
 	EventHandler(window);
+	_mouseControls->addForceToBody(_map->getDynamicBodies());
 	_world->Step(1/60.0f,8,3);
 	_player->update();
 	_map->update();
+	if (hold == true)
+	{
+		std::cout << "hold" << std::endl;
+	}
 }
 
 void Game::render(SDL_Renderer* renderer)
@@ -59,6 +65,20 @@ void Game::EventHandler(SDL_Window* window)
 
 
 		case SDL_KEYUP:
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			if (_events.button.button == SDL_BUTTON_LEFT)
+			{
+				_mouseControls->hold = true;
+			}
+			break;
+
+		case SDL_MOUSEBUTTONUP:
+			if (_events.button.button == SDL_BUTTON_LEFT)
+			{
+				_mouseControls->hold = false;
+				_mouseControls->relese(_map->getDynamicBodies());
+			}
 			break;
 
 

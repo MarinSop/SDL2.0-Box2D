@@ -9,13 +9,12 @@ Player::Player(b2World* world,SDL_Renderer* renderer,char const* texPath)
 	//creating player
 	SDL_Point size = { 32.0f,32.0f };
 	SDL_Color color = { 0,0,255,255 };
-	_physicBody.addRectBody(world, b2Vec2(0.0f, 0.0f), b2Vec2(size.x, size.y), BodyType::Dynamic, false, NULL, NULL, NULL,NULL);
+	_physicBody.addRectBody(world, b2Vec2(0.0f, 0.0f), b2Vec2(size.x, size.y), BodyType::Dynamic, false, 0.0f, 2, NULL,NULL);
 	_graphicsBody.addGraphics(renderer,size, _physicBody.getBody()->GetPosition(),size,40);
-	_physicBody.getFixtureDef()->friction = 0.0f;
 	//creating foot sensor
-	_physicBody.addFixtureToBody(b2Vec2(0.0f,15.0f),b2Vec2(size.x/2,size.y/2),true,NULL,NULL,NULL,(std::string*)"foot");
-	rect.w = size.x;
-	rect.h = 15.0f;
+	_physicBody.addFixtureToBody(b2Vec2(0.0f,0.0f),b2Vec2(size.x+3,size.y+3),true,NULL,NULL,NULL,(std::string*)"foot");
+	rect.w = size.x+3;
+	rect.h = size.y+3;
 }
 
 Player::~Player()
@@ -31,12 +30,12 @@ void Player::update()
 void Player::draw(SDL_Renderer* render)
 {
 	//drawing player body
-	_graphicsBody.setPhysicPosition(_physicBody.getBody()->GetPosition());
+	_graphicsBody.setPhysicPosition(_physicBody.getBody()->GetPosition(),_physicBody.getBody()->GetAngle());
 	rect.x = _physicBody.getBody()->GetPosition().x * M2P - rect.w / 2.0f;
-	rect.y = _physicBody.getBody()->GetPosition().y * M2P - rect.h / 2.0f + 30.0f /2.0f;
-	_graphicsBody.draw(render,_playerTexture);
+	rect.y = _physicBody.getBody()->GetPosition().y * M2P - rect.h / 2.0f;
 	SDL_SetRenderDrawColor(render, 255, 0, 0, 255);
 	SDL_RenderFillRect(render, &rect);
+	_graphicsBody.draw(render,_playerTexture);
 }
 
 void Player::inputHandler()

@@ -10,6 +10,9 @@ public:
 
 	void update();
 	void draw(SDL_Renderer* renderer);
+	SDL_Rect* getGraphicsBodyPosition();
+	PhysicBody* getPhysicBody();
+	bool held = false;
 
 private:
 	float _ID;

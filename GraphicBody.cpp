@@ -13,15 +13,21 @@ void GraphicBody::addGraphics(SDL_Renderer* renderer, SDL_Point size, b2Vec2 pos
 	_tilePos->h = tileSize.y;
 }
 
-void GraphicBody::setPhysicPosition(b2Vec2 pos)
+void GraphicBody::setPhysicPosition(b2Vec2 pos, float angle)
 {
 	_gamePos->x = pos.x * M2P - _gamePos->w / 2.0f;
 	_gamePos->y = pos.y * M2P - _gamePos->h / 2.0f;
+	_angle = angle * 57.3f;
 }
 
 void GraphicBody::draw(SDL_Renderer* render, SDL_Texture* tex)
 {
-	SDL_RenderCopyEx(render,tex,_tilePos,_gamePos,angle,NULL,SDL_FLIP_NONE);
+	SDL_RenderCopyEx(render,tex,_tilePos,_gamePos,_angle,NULL,SDL_FLIP_NONE);
+}
+
+SDL_Rect* GraphicBody::getGamePos()
+{
+	return _gamePos;
 }
 
 b2Vec2 GraphicBody::imageTilePos(int id)

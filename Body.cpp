@@ -33,10 +33,28 @@ Body::~Body()
 
 void Body::update()
 {
-	_graphicBody->setPhysicPosition(_physicBody->getBody()->GetPosition());
+	if (held == true)
+	{
+		int mouseX, mouseY;
+		SDL_GetMouseState(&mouseX, &mouseY);
+		b2Vec2 mouse(mouseX,mouseY);
+		mouse -= (M2P*_physicBody->getBody()->GetWorldCenter());
+		_physicBody->getBody()->ApplyForceToCenter(mouse, true);
+	}
+	_graphicBody->setPhysicPosition(_physicBody->getBody()->GetPosition(),_physicBody->getBody()->GetAngle());
 }
 
 void Body::draw(SDL_Renderer* renderer)
 {
 	_graphicBody->draw(renderer,_bodyTexture);
+}
+
+SDL_Rect* Body::getGraphicsBodyPosition()
+{
+	return _graphicBody->getGamePos();
+}
+
+PhysicBody* Body::getPhysicBody()
+{
+	return _physicBody;
 }

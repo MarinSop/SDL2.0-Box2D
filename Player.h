@@ -20,9 +20,9 @@ private:
 	PhysicBody _physicBody;
 	GraphicBody _graphicsBody;
 	SDL_Texture* _playerTexture;
-	float _dragForce = 0.5f;
-	float _jumpHeight = 100.0f;
-	float _moveSpeed = 0.8f;
+	float _dragForce = 0.8f;
+	float _jumpHeight = 250.0f;
+	float _moveSpeed = 1.f;
 	SDL_Rect rect;
 
 };
