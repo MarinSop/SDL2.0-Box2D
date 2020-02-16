@@ -33,13 +33,31 @@ Body::~Body()
 
 void Body::update()
 {
-	if (held == true)
+	if (held == true && isFrozen == false)
 	{
 		int mouseX, mouseY;
 		SDL_GetMouseState(&mouseX, &mouseY);
 		b2Vec2 mouse(mouseX,mouseY);
 		mouse -= (M2P*_physicBody->getBody()->GetWorldCenter());
-		_physicBody->getBody()->ApplyForceToCenter(mouse, true);
+		_physicBody->getBody()->SetFixedRotation(true);
+		_physicBody->getBody()->SetLinearVelocity(mouse);
+	}
+	if (isFrozen == true)
+	{
+
+		if (_timerStart == false)
+		{
+			_timerStartPos = SDL_GetTicks();
+			_timerStart = true;
+		}
+		int current = SDL_GetTicks();
+		_physicBody->getBody()->SetType(b2_staticBody);
+		if (current > _timerStartPos + 5000)
+		{
+			_physicBody->getBody()->SetType(b2_dynamicBody);
+			isFrozen = false;
+			used = true;
+		}
 	}
 	_graphicBody->setPhysicPosition(_physicBody->getBody()->GetPosition(),_physicBody->getBody()->GetAngle());
 }

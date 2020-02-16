@@ -24,18 +24,16 @@ bool Map::load(b2World* world, SDL_Renderer* renderer)
 		const char* tmpChar = layer->Attribute("name");
 		std::string tmpStr(tmpChar);
 		//storing tilemap 
-		if (tmpStr == "Background")
+		/*if (tmpStr == "Background")
 		{
 			_backgroundStr = data->GetText();
-		}
-		else if (tmpStr == "Ground")
+		}*/
+		if (tmpStr == "Ground")
 		{
 			_groundStr = data->GetText();
 		}
 		layer = layer->NextSiblingElement("layer");
 	}
-
-	std::cout << _groundStr << std::endl;
 	XMLElement* objectgroup = map->FirstChildElement("objectgroup");
 	while (objectgroup != nullptr)
 	{
@@ -45,6 +43,7 @@ bool Map::load(b2World* world, SDL_Renderer* renderer)
 		//creating box2d bodies
 		while (object != nullptr)
 		{
+
 			if (tmpStr == "Static")
 			{
 				float x, y, w, h;
@@ -52,21 +51,44 @@ bool Map::load(b2World* world, SDL_Renderer* renderer)
 				object->QueryFloatAttribute("y", &y);
 				object->QueryFloatAttribute("width", &w);
 				object->QueryFloatAttribute("height", &h);
-				_static.push_back(new Body(world, renderer, b2Vec2(x, y), b2Vec2(w, h), BodyType::Static, 
-					false, NULL, NULL, NULL, (std::string*)"ground",NULL,NULL));
+				_static.push_back(new Body(world, renderer, b2Vec2(x, y), b2Vec2(w, h), BodyType::Static,
+					false, NULL, NULL, NULL, (std::string*)"ground", NULL, NULL));
 
 			}
 			else if (tmpStr == "Dynamic")
 			{
 				float x, y, w, h, id;
+				float density, friction, restitution;
+				bool sensor;
+				std::string userDataStr;
 				object->QueryFloatAttribute("x", &x);
 				object->QueryFloatAttribute("y", &y);
 				object->QueryFloatAttribute("width", &w);
 				object->QueryFloatAttribute("height", &h);
 				object->QueryFloatAttribute("gid", &id);
+				XMLElement* properties = object->FirstChildElement("properties");
+				XMLElement* property = properties->FirstChildElement("property");
+				while (property != nullptr)
+				{
+					const char* tempChar = property->Attribute("name");
+					std::string tempString(tempChar);
+					if (tempString == "Density") property->QueryFloatAttribute("value", &density);
+					else if (tempString == "Friction") property->QueryFloatAttribute("value", &friction);
+					else if (tempString == "Restitution") property->QueryFloatAttribute("value", &restitution);
+					else if (tempString == "Sensor") property->QueryBoolAttribute("value", &sensor);
+					else if (tempString == "UserData") 
+					{
+						const char* tmpUserData = property->Attribute("value");
+						userDataStr = static_cast<std::string>(tmpUserData);
+					}
+						property = property->NextSiblingElement("property");
+				}
+
 				_dynamic.push_back(new Body(world, renderer, b2Vec2(x, y), b2Vec2(w, h), BodyType::Dynamic,
-					false, NULL, 10, NULL, (std::string*)"ground", id,"textures\\tilemap.png"));
+					sensor, friction, density, restitution, (std::string*)"ground", id, "textures\\tilemap.png"));
 			}
+
+
 			object = object->NextSiblingElement("object");
 		}
 		objectgroup = objectgroup->NextSiblingElement("objectgroup");

@@ -6,7 +6,7 @@ Game::Game(SDL_Renderer* renderer)
 	_world = new b2World(_gravity);
 	_contactListener = new MyContactListener();
 	_world->SetContactListener(_contactListener);
-	_player = new Player(_world,renderer,"textures\\tilemap.png");
+	_player = new Player(_world,renderer,"textures\\player2.png");
 	_map = new Map();
 	_map->load(_world,renderer);
 	_mouseControls = new MouseControls();
@@ -70,6 +70,7 @@ void Game::EventHandler(SDL_Window* window)
 			if (_events.button.button == SDL_BUTTON_LEFT)
 			{
 				_mouseControls->hold = true;
+				_player->freeze();
 			}
 			break;
 
@@ -78,6 +79,7 @@ void Game::EventHandler(SDL_Window* window)
 			{
 				_mouseControls->hold = false;
 				_mouseControls->relese(_map->getDynamicBodies());
+				_player->unFreeze();
 			}
 			break;
 

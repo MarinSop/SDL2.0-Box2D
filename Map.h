@@ -25,7 +25,7 @@ private:
 	SDL_Point _tileSize = { 32,32 };
 	std::vector<Body*> _static;
 	std::vector<Body*> _dynamic;
-	std::string _backgroundStr;
+	//std::string _backgroundStr;
 	std::string _groundStr;
 
 	Tilemap* _tilemap;

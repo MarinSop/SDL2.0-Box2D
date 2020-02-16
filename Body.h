@@ -13,6 +13,8 @@ public:
 	SDL_Rect* getGraphicsBodyPosition();
 	PhysicBody* getPhysicBody();
 	bool held = false;
+	bool isFrozen = false;
+	bool used = false;
 
 private:
 	float _ID;
@@ -20,5 +22,8 @@ private:
 	PhysicBody* _physicBody;
 	GraphicBody* _graphicBody;
 	SDL_Texture* _bodyTexture;
+
+	bool _timerStart = false;
+	int _timerStartPos = 0;
 };
 

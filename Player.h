@@ -16,6 +16,9 @@ public:
 
 	void inputHandler();
 	void jump();
+
+	void freeze();
+	void unFreeze();
 private:
 	PhysicBody _physicBody;
 	GraphicBody _graphicsBody;
@@ -23,6 +26,7 @@ private:
 	float _dragForce = 0.8f;
 	float _jumpHeight = 250.0f;
 	float _moveSpeed = 1.f;
+	b2World* _world;
 	SDL_Rect rect;
 
 };

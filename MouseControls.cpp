@@ -20,9 +20,10 @@ void MouseControls::addForceToBody(std::vector<Body*> dynamicBodyList)
 			if (b->getGraphicsBodyPosition()->x < mousePosX &&
 				b->getGraphicsBodyPosition()->x + b->getGraphicsBodyPosition()->w > mousePosX &&
 				b->getGraphicsBodyPosition()->y < mousePosY &&
-				b->getGraphicsBodyPosition()->y + b->getGraphicsBodyPosition()->h > mousePosY)
+				b->getGraphicsBodyPosition()->y + b->getGraphicsBodyPosition()->h > mousePosY && b->used == false)
 			{
 				b->held = true;
+				
 			}
 		}
 
@@ -32,9 +33,20 @@ void MouseControls::addForceToBody(std::vector<Body*> dynamicBodyList)
 
 void MouseControls::relese(std::vector<Body*> dynamicBodyList)
 {
+	int mousePosX, mousePosY;
+	SDL_GetMouseState(&mousePosX, &mousePosY);
 	for (auto b : dynamicBodyList)
 	{
-		b->held = false;
+		if (b->getGraphicsBodyPosition()->x < mousePosX &&
+			b->getGraphicsBodyPosition()->x + b->getGraphicsBodyPosition()->w > mousePosX&&
+			b->getGraphicsBodyPosition()->y < mousePosY &&
+			b->getGraphicsBodyPosition()->y + b->getGraphicsBodyPosition()->h > mousePosY)
+		{
+			b->held = false;
+			b->getPhysicBody()->getBody()->SetFixedRotation(false);
+			b->isFrozen = true;
+
+		}
 	}
 }
 
