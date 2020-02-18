@@ -10,11 +10,13 @@ public:
 	~MouseControls();
 
 	bool hold = false;
-	void addForceToBody(std::vector<Body*> dynamicBodyList);
+	void moveBody(std::vector<Body*> dynamicBodyList);
 	void relese(std::vector<Body*> dynamicBodyList);
+	void activateBarriers(std::vector<Body*> barrierBodyList);
+	void deactivateBarriers(std::vector<Body*> barrierBodyList);
 
 private:
-	
+	bool areBarriersActive = false;
 	
 
 

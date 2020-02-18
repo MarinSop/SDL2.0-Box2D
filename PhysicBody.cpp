@@ -1,8 +1,18 @@
 #include "PhysicBody.h"
 
+PhysicBody::PhysicBody()
+{
+}
+
+PhysicBody::~PhysicBody()
+{
+	_world->DestroyBody(_body);
+}
+
 b2Body* PhysicBody::addRectBody(b2World* world, b2Vec2 pos, b2Vec2 size, BodyType type, bool isSensor,
 	float friction, float density, float restitution, std::string* userData)
 {
+	_world = world;
 	//creating bodyDef
 	switch (type)
 	{
@@ -20,7 +30,7 @@ b2Body* PhysicBody::addRectBody(b2World* world, b2Vec2 pos, b2Vec2 size, BodyTyp
 	}
 	_bodyDef.position.Set(pos.x*P2M+(size.x/2)*P2M,pos.y*P2M+(size.y/2)*P2M);
 	//creating body
-	_body = world->CreateBody(&_bodyDef);
+	_body = _world->CreateBody(&_bodyDef);
 	//creating shape
 	_polygonShape.SetAsBox((size.x/2.0f)*P2M,(size.y/2.0f)*P2M);
 	//creatin fixture

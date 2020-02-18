@@ -1,9 +1,10 @@
 #include "Tilemap.h"
 
 Tilemap::Tilemap(SDL_Renderer* renderer,int width,int height,int tileWidth,int tileHeight,const char* path
-,std::string ground)
+,std::string ground, std::string barrier)
 	:_width(width),_height(height)
 {
+	//loading tilemap texture
 	SDL_Surface* surface = IMG_Load(path);
 	_tilemapTexture = SDL_CreateTextureFromSurface(renderer,surface);
 	SDL_FreeSurface(surface);
@@ -25,6 +26,22 @@ Tilemap::Tilemap(SDL_Renderer* renderer,int width,int height,int tileWidth,int t
 		}
 	}
 	_ground.push_back(result);
+	result = 0;
+	for (int i = 1; i < barrier.size(); ++i)
+	{
+		int j = barrier[i] - '0';
+
+		if (j >= 0)
+		{
+			result = result * 10 + j;
+		}
+		else
+		{
+			_barrier.push_back(result);
+			result = 0;
+		}
+	}
+	_barrier.push_back(result);
 
 		std::cout << _ground[0] << std::endl;
 
@@ -33,6 +50,12 @@ Tilemap::Tilemap(SDL_Renderer* renderer,int width,int height,int tileWidth,int t
 
 Tilemap::~Tilemap()
 {
+	delete _tilemapTexture;
+	for (int i = 0; i < _tiles.size(); i++)
+	{
+		delete _tiles[i];
+	}
+	_tiles.clear();
 }
 
 void Tilemap::create(SDL_Renderer* renderer)
@@ -49,6 +72,29 @@ void Tilemap::create(SDL_Renderer* renderer)
 				{
 					SDL_Point screenPos = { x * 32,y * 32 };
 					_tiles.push_back(new Tile(_tileSize,_ground[i],screenPos));
+				}
+				++x;
+			}
+			else
+			{
+				x = 0;
+				++y;
+			}
+		}
+		//std::cout << "x  i  y  " << x << y << std::endl;
+	}
+	x = 0;
+	y = 0;
+	for (int i = 0; i < _barrier.size(); ++i)
+	{
+		if (y <= _height - 1)
+		{
+			if (x <= _width - 1)
+			{
+				if (_barrier[i] > 0)
+				{
+					SDL_Point screenPos = { x * 32,y * 32 };
+					_tiles.push_back(new Tile(_tileSize, _barrier[i], screenPos));
 				}
 				++x;
 			}

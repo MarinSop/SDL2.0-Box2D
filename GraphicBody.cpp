@@ -1,5 +1,15 @@
 #include "GraphicBody.h"
 
+GraphicBody::GraphicBody()
+{
+}
+
+GraphicBody::~GraphicBody()
+{
+	delete _gamePos;
+	delete _tilePos;
+}
+
 void GraphicBody::addGraphics(SDL_Renderer* renderer, SDL_Point size, b2Vec2 pos, SDL_Point tileSize,int id)
 {
 	_gamePos->w = size.x;

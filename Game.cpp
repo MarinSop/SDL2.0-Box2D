@@ -6,7 +6,7 @@ Game::Game(SDL_Renderer* renderer)
 	_world = new b2World(_gravity);
 	_contactListener = new MyContactListener();
 	_world->SetContactListener(_contactListener);
-	_player = new Player(_world,renderer,"textures\\player2.png");
+	_player = new Player(_world,renderer,"textures\\player.png");
 	_map = new Map();
 	_map->load(_world,renderer);
 	_mouseControls = new MouseControls();
@@ -21,14 +21,10 @@ Game::Game(SDL_Renderer* renderer)
 void Game::update(SDL_Window* window)
 {
 	EventHandler(window);
-	_mouseControls->addForceToBody(_map->getDynamicBodies());
+	_mouseControls->moveBody(_map->getDynamicBodies());
 	_world->Step(1/60.0f,8,3);
 	_player->update();
 	_map->update();
-	if (hold == true)
-	{
-		std::cout << "hold" << std::endl;
-	}
 }
 
 void Game::render(SDL_Renderer* renderer)
@@ -56,7 +52,7 @@ void Game::EventHandler(SDL_Window* window)
 			}
 			if (_events.key.keysym.sym == SDLK_SPACE)
 			{
-				if (_contactListener->isOnGround == true)
+				if (_contactListener->numFootContact > 0)
 				{
 				_player->jump();
 				}
@@ -70,6 +66,7 @@ void Game::EventHandler(SDL_Window* window)
 			if (_events.button.button == SDL_BUTTON_LEFT)
 			{
 				_mouseControls->hold = true;
+				_mouseControls->activateBarriers(_map->getBarrierBodies());
 				_player->freeze();
 			}
 			break;
@@ -79,6 +76,7 @@ void Game::EventHandler(SDL_Window* window)
 			{
 				_mouseControls->hold = false;
 				_mouseControls->relese(_map->getDynamicBodies());
+				_mouseControls->deactivateBarriers(_map->getBarrierBodies());
 				_player->unFreeze();
 			}
 			break;
@@ -95,3 +93,5 @@ void Game::EventHandler(SDL_Window* window)
 
 
 }
+
+

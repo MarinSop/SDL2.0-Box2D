@@ -12,6 +12,8 @@ Map::~Map()
 
 bool Map::load(b2World* world, SDL_Renderer* renderer)
 {
+	_world = world;
+	_renderer = renderer;
 	//loading tmx file
 	if (doc.LoadFile("maps\\level.tmx")) return XML_ERROR_FILE_READ_ERROR;
 	XMLElement* map = doc.FirstChildElement("map");
@@ -24,10 +26,10 @@ bool Map::load(b2World* world, SDL_Renderer* renderer)
 		const char* tmpChar = layer->Attribute("name");
 		std::string tmpStr(tmpChar);
 		//storing tilemap 
-		/*if (tmpStr == "Background")
+		if (tmpStr == "Barrier")
 		{
-			_backgroundStr = data->GetText();
-		}*/
+			_barrierStr = data->GetText();
+		}
 		if (tmpStr == "Ground")
 		{
 			_groundStr = data->GetText();
@@ -53,6 +55,19 @@ bool Map::load(b2World* world, SDL_Renderer* renderer)
 				object->QueryFloatAttribute("height", &h);
 				_static.push_back(new Body(world, renderer, b2Vec2(x, y), b2Vec2(w, h), BodyType::Static,
 					false, NULL, NULL, NULL, (std::string*)"ground", NULL, NULL));
+
+			}
+			if (tmpStr == "Barriers")
+			{
+				float x, y, w, h;
+				object->QueryFloatAttribute("x", &x);
+				object->QueryFloatAttribute("y", &y);
+				object->QueryFloatAttribute("width", &w);
+				object->QueryFloatAttribute("height", &h);
+				Body* b = new Body(world, renderer, b2Vec2(x, y), b2Vec2(w, h), BodyType::Static,
+					false, NULL, NULL, NULL, (std::string*)"barrier", NULL, NULL);
+				b->getPhysicBody()->getBody()->SetActive(false);
+				_barrier.push_back(b);
 
 			}
 			else if (tmpStr == "Dynamic")
@@ -93,7 +108,7 @@ bool Map::load(b2World* world, SDL_Renderer* renderer)
 		}
 		objectgroup = objectgroup->NextSiblingElement("objectgroup");
 
-		_tilemap = new Tilemap(renderer,_mapSize.x,_mapSize.y,_tileSize.x,_tileSize.y,"textures\\tilemap.png",_groundStr);
+		_tilemap = new Tilemap(renderer,_mapSize.x,_mapSize.y,_tileSize.x,_tileSize.y,"textures\\tilemap.png",_groundStr,_barrierStr);
 		_tilemap->create(renderer);
 	}
 
@@ -123,3 +138,10 @@ std::vector<Body*> Map::getDynamicBodies()
 {
 	return _dynamic;
 }
+
+std::vector<Body*> Map::getBarrierBodies()
+{
+	return _barrier;
+}
+
+

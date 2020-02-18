@@ -29,6 +29,9 @@ Body::Body(b2World* world, SDL_Renderer* renderer, b2Vec2 pos, b2Vec2 size, Body
 
 Body::~Body()
 {
+	delete _graphicBody;
+	delete _physicBody;
+	delete _bodyTexture;
 }
 
 void Body::update()

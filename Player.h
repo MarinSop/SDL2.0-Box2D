@@ -19,9 +19,12 @@ public:
 
 	void freeze();
 	void unFreeze();
+
+	void setPosition(b2Vec2 pos, float angle);
+	b2Vec2 getPosition();
 private:
-	PhysicBody _physicBody;
-	GraphicBody _graphicsBody;
+	PhysicBody* _physicBody;
+	GraphicBody* _graphicsBody;
 	SDL_Texture* _playerTexture;
 	float _dragForce = 0.8f;
 	float _jumpHeight = 250.0f;

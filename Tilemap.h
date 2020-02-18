@@ -8,7 +8,7 @@ class Tilemap
 {
 public:
 	Tilemap(SDL_Renderer* renderer, int width, int height, int tileWidth, int tileHeight, const char* path
-		, std::string ground);
+		, std::string ground, std::string barrier);
 	~Tilemap();
 
 	void create(SDL_Renderer* renderer);
@@ -22,5 +22,6 @@ private:
 
 	std::vector<Tile*> _tiles;
 	std::vector<int> _ground;
+	std::vector<int> _barrier;
 };
 

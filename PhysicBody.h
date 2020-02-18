@@ -15,6 +15,8 @@ enum BodyType
 class PhysicBody
 {
 public:
+	PhysicBody();
+	~PhysicBody();
 	b2Body* addRectBody(b2World* world,b2Vec2 pos,b2Vec2 size,BodyType type, bool isSensor,
 		float friction, float density, float restitution, std::string* userData);
 	b2FixtureDef* addFixtureToBody(b2Vec2 pos,b2Vec2 size,bool isSensor
@@ -25,6 +27,7 @@ public:
 	b2FixtureDef* getFixtureDef();
 
 private:
+	b2World* _world;
 	b2Body* _body;
 	b2BodyDef _bodyDef;
 	b2PolygonShape _polygonShape;

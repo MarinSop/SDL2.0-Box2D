@@ -9,7 +9,7 @@ MouseControls::~MouseControls()
 {
 }
 
-void MouseControls::addForceToBody(std::vector<Body*> dynamicBodyList)
+void MouseControls::moveBody(std::vector<Body*> dynamicBodyList)
 {
 	if (hold == true)
 	{
@@ -46,6 +46,30 @@ void MouseControls::relese(std::vector<Body*> dynamicBodyList)
 			b->getPhysicBody()->getBody()->SetFixedRotation(false);
 			b->isFrozen = true;
 
+		}
+	}
+}
+
+void MouseControls::activateBarriers(std::vector<Body*> barrierBodyList)
+{
+	if (areBarriersActive == false)
+	{
+		for (auto b : barrierBodyList)
+		{
+			areBarriersActive = true;
+			b->getPhysicBody()->getBody()->SetActive(true);
+		}
+	}
+}
+
+void MouseControls::deactivateBarriers(std::vector<Body*> barrierBodyList)
+{
+	if (areBarriersActive == true)
+	{
+		for (auto b : barrierBodyList)
+		{
+			areBarriersActive = false;
+			b->getPhysicBody()->getBody()->SetActive(false);
 		}
 	}
 }
