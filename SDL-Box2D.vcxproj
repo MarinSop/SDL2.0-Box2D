@@ -159,6 +159,7 @@
     <ClCompile Include="MyContactListener.cpp" />
     <ClCompile Include="PhysicBody.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Teleporter.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Tilemap.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="MyContactListener.h" />
     <ClInclude Include="PhysicBody.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Teleporter.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Tilemap.h" />
     <ClInclude Include="tinyxml2.h" />

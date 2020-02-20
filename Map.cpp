@@ -33,6 +33,17 @@ bool Map::load(b2World* world, SDL_Renderer* renderer)
 		if (tmpStr == "Ground")
 		{
 			_groundStr = data->GetText();
+			XMLElement* layerProperties = layer->FirstChildElement("properties");
+			XMLElement* layerProperty = layerProperties->FirstChildElement("property");
+			while (layerProperty != nullptr)
+			{
+				const char* tempChar = layerProperty->Attribute("name");
+				std::string tempString(tempChar);
+				if (tempString == "StartPosX") layerProperty->QueryFloatAttribute("value", &startingPos.x);
+				else if (tempString == "StartPosY") layerProperty->QueryFloatAttribute("value", &startingPos.y);
+				
+				layerProperty = layerProperty->NextSiblingElement("property");
+			}
 		}
 		layer = layer->NextSiblingElement("layer");
 	}
@@ -102,6 +113,37 @@ bool Map::load(b2World* world, SDL_Renderer* renderer)
 				_dynamic.push_back(new Body(world, renderer, b2Vec2(x, y), b2Vec2(w, h), BodyType::Dynamic,
 					sensor, friction, density, restitution, (std::string*)"ground", id, "textures\\tilemap.png"));
 			}
+			else if (tmpStr == "Interactions")
+			{
+				float x, y, w, h, id;
+				std::string name;
+				b2Vec2 teleportPos;
+				object->QueryFloatAttribute("x", &x);
+				object->QueryFloatAttribute("y", &y);
+				object->QueryFloatAttribute("width", &w);
+				object->QueryFloatAttribute("height", &h);
+				object->QueryFloatAttribute("gid", &id);
+				XMLElement* properties = object->FirstChildElement("properties");
+				XMLElement* property = properties->FirstChildElement("property");
+				while (property != nullptr)
+				{
+					const char* tempChar = property->Attribute("name");
+					std::string tempString(tempChar);
+					if (tempString == "Name")
+					{
+						const char* tmpUserData = property->Attribute("value");
+						name = static_cast<std::string>(tmpUserData);
+					}
+					if (tempString == "TeleportToX") property->QueryFloatAttribute("value", &teleportPos.x);
+					if (tempString == "TeleportToY") property->QueryFloatAttribute("value", &teleportPos.y);
+					property = property->NextSiblingElement("property");
+				}
+				if (name == "Teleporter")
+				{
+					_teleporter.push_back(new Teleporter(renderer, b2Vec2(w, h), b2Vec2(x, y), b2Vec2(32, 32), id, teleportPos,
+						"textures\\tilemap.png"));
+				}
+			}
 
 
 			object = object->NextSiblingElement("object");
@@ -115,12 +157,16 @@ bool Map::load(b2World* world, SDL_Renderer* renderer)
 	return true;
 }
 
-void Map::update()
+void Map::update(Player& player)
 {
 	//updating texture on bodies
 	for (int i = 0; i < _dynamic.size(); i++)
 	{
 		_dynamic[i]->update();
+	}
+	for (int i = 0; i < _teleporter.size(); i++)
+	{
+		_teleporter[i]->update(player);
 	}
 }
 
@@ -131,6 +177,10 @@ void Map::draw(SDL_Renderer* renderer)
 	for (int i = 0; i < _dynamic.size(); i++)
 	{
 		_dynamic[i]->draw(renderer);
+	}
+	for (int i = 0; i < _teleporter.size(); i++)
+	{
+		_teleporter[i]->draw(renderer);
 	}
 }
 

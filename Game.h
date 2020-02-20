@@ -21,7 +21,7 @@ public:
 private:
 
 	b2World* _world;
-	b2Vec2 _gravity = b2Vec2(0.0f,2.0f);
+	b2Vec2 _gravity = b2Vec2(0.0f,0.5f);
 
 	bool hold = false;
 

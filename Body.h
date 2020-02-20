@@ -22,8 +22,10 @@ private:
 	PhysicBody* _physicBody;
 	GraphicBody* _graphicBody;
 	SDL_Texture* _bodyTexture;
+	SDL_Rect* _freezeTimer;
 
 	bool _timerStart = false;
-	int _timerStartPos = 0;
+	float _timerStartPos = 0;
+	float _startFreezeTimerWidth;
 };
 

@@ -17,8 +17,8 @@ void GraphicBody::addGraphics(SDL_Renderer* renderer, SDL_Point size, b2Vec2 pos
 	_gamePos->x = pos.x;// *M2P - _gamePos.w / 2.0f;
 	_gamePos->y = pos.y;// *M2P - _gamePos.h / 2.0f;
 	b2Vec2 texPos = imageTilePos(id);
-	_tilePos->x = texPos.x*tileSize.x;
-	_tilePos->y = texPos.y*tileSize.y;
+	_tilePos->x = texPos.x*32;
+	_tilePos->y = texPos.y*32;
 	_tilePos->w = tileSize.x;
 	_tilePos->h = tileSize.y;
 }
@@ -34,6 +34,7 @@ void GraphicBody::draw(SDL_Renderer* render, SDL_Texture* tex)
 {
 	SDL_RenderCopyEx(render,tex,_tilePos,_gamePos,_angle,NULL,SDL_FLIP_NONE);
 }
+
 
 SDL_Rect* GraphicBody::getGamePos()
 {

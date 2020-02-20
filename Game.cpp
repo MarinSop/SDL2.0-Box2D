@@ -6,9 +6,9 @@ Game::Game(SDL_Renderer* renderer)
 	_world = new b2World(_gravity);
 	_contactListener = new MyContactListener();
 	_world->SetContactListener(_contactListener);
-	_player = new Player(_world,renderer,"textures\\player.png");
 	_map = new Map();
 	_map->load(_world,renderer);
+	_player = new Player(_world,renderer,"textures\\player.png",_map->startingPos);
 	_mouseControls = new MouseControls();
 	
 }
@@ -24,7 +24,7 @@ void Game::update(SDL_Window* window)
 	_mouseControls->moveBody(_map->getDynamicBodies());
 	_world->Step(1/60.0f,8,3);
 	_player->update();
-	_map->update();
+	_map->update(*_player);
 }
 
 void Game::render(SDL_Renderer* renderer)

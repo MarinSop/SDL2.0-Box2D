@@ -37,10 +37,7 @@ void MouseControls::relese(std::vector<Body*> dynamicBodyList)
 	SDL_GetMouseState(&mousePosX, &mousePosY);
 	for (auto b : dynamicBodyList)
 	{
-		if (b->getGraphicsBodyPosition()->x < mousePosX &&
-			b->getGraphicsBodyPosition()->x + b->getGraphicsBodyPosition()->w > mousePosX&&
-			b->getGraphicsBodyPosition()->y < mousePosY &&
-			b->getGraphicsBodyPosition()->y + b->getGraphicsBodyPosition()->h > mousePosY)
+		if(b->held == true)
 		{
 			b->held = false;
 			b->getPhysicBody()->getBody()->SetFixedRotation(false);

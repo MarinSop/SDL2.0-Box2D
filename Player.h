@@ -8,7 +8,7 @@
 class Player
 {
 public:
-	Player(b2World* world, SDL_Renderer* renderer, char const* texPath);
+	Player(b2World* world, SDL_Renderer* renderer, char const* texPath,b2Vec2 startingPos);
 	~Player();
 
 	void update();
@@ -22,13 +22,14 @@ public:
 
 	void setPosition(b2Vec2 pos, float angle);
 	b2Vec2 getPosition();
+	b2Vec2 getBodyPosition() { return _physicBody->getBody()->GetPosition(); }
 private:
 	PhysicBody* _physicBody;
 	GraphicBody* _graphicsBody;
 	SDL_Texture* _playerTexture;
-	float _dragForce = 0.8f;
-	float _jumpHeight = 250.0f;
-	float _moveSpeed = 1.f;
+	float _dragForce = 0.5f;
+	float _jumpHeight = 150.0f;
+	float _moveSpeed = 0.5f;
 	b2World* _world;
 	SDL_Rect rect;
 

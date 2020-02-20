@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(b2World* world,SDL_Renderer* renderer,char const* texPath)
+Player::Player(b2World* world,SDL_Renderer* renderer,char const* texPath, b2Vec2 startingPos)
 	:_world(world)
 {
 	//creating texture
@@ -12,7 +12,7 @@ Player::Player(b2World* world,SDL_Renderer* renderer,char const* texPath)
 	SDL_Color color = { 0,0,255,255 };
 	_physicBody = new PhysicBody();
 	_graphicsBody = new GraphicBody();
-	_physicBody->addRectBody(world, b2Vec2(700.0f, 0.0f), b2Vec2(size.x, size.y), BodyType::Dynamic, false, 0.1, 2, NULL,NULL);
+	_physicBody->addRectBody(world, b2Vec2(startingPos.x*32.0f, startingPos.y*32.0f), b2Vec2(size.x, size.y), BodyType::Dynamic, false, 0.1, 2, NULL,NULL);
 	_graphicsBody->addGraphics(renderer,size, _physicBody->getBody()->GetPosition(),size,1);
 	//creating foot sensor
 	_physicBody->addFixtureToBody(b2Vec2(0.0f,0.0f),b2Vec2(size.x+3,size.y+3),true,NULL,NULL,NULL,(std::string*)"foot");
@@ -73,7 +73,7 @@ void Player::unFreeze()
 
 void Player::setPosition(b2Vec2 pos, float angle)
 {
-	_physicBody->getBody()->SetTransform(b2Vec2(pos.x*P2M,pos.x*P2M),angle);
+	_physicBody->getBody()->SetTransform(b2Vec2(pos.x*P2M,pos.y*P2M),angle);
 }
 
 b2Vec2 Player::getPosition()
