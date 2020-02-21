@@ -33,8 +33,6 @@ void MouseControls::moveBody(std::vector<Body*> dynamicBodyList)
 
 void MouseControls::relese(std::vector<Body*> dynamicBodyList)
 {
-	int mousePosX, mousePosY;
-	SDL_GetMouseState(&mousePosX, &mousePosY);
 	for (auto b : dynamicBodyList)
 	{
 		if(b->held == true)

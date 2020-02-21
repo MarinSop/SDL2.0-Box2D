@@ -9,7 +9,8 @@ enum BodyType
 {
 	Dynamic,
 	Kinematic,
-	Static
+	Static,
+	None
 };
 
 class PhysicBody

@@ -50,12 +50,15 @@ Tilemap::Tilemap(SDL_Renderer* renderer,int width,int height,int tileWidth,int t
 
 Tilemap::~Tilemap()
 {
-	delete _tilemapTexture;
+	SDL_DestroyTexture(_tilemapTexture);
+	_tilemapTexture = nullptr;
 	for (int i = 0; i < _tiles.size(); i++)
 	{
 		delete _tiles[i];
 	}
 	_tiles.clear();
+	_ground.clear();
+	_barrier.clear();
 }
 
 void Tilemap::create(SDL_Renderer* renderer)

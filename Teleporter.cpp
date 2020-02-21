@@ -14,6 +14,9 @@ Teleporter::Teleporter(SDL_Renderer* renderer, b2Vec2 size, b2Vec2 pos, b2Vec2  
 
 Teleporter::~Teleporter()
 {
+	delete _graphicBody;
+	SDL_DestroyTexture(_tex);
+	_tex = nullptr;
 }
 
 void Teleporter::update(Player& player)

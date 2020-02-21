@@ -2,10 +2,14 @@
 
 GraphicBody::GraphicBody()
 {
+	_gamePos = new SDL_Rect();
+	_tilePos = new SDL_Rect();
 }
 
 GraphicBody::~GraphicBody()
 {
+	SDL_DestroyTexture(_tex);
+	_tex = nullptr;
 	delete _gamePos;
 	delete _tilePos;
 }
@@ -23,6 +27,13 @@ void GraphicBody::addGraphics(SDL_Renderer* renderer, SDL_Point size, b2Vec2 pos
 	_tilePos->h = tileSize.y;
 }
 
+void GraphicBody::addTexture(SDL_Renderer* renderer)
+{
+	SDL_Surface* surface = IMG_Load("textures\\tilemap.png");
+	_tex = SDL_CreateTextureFromSurface(renderer,surface);
+	SDL_FreeSurface(surface);
+}
+
 void GraphicBody::setPhysicPosition(b2Vec2 pos, float angle)
 {
 	_gamePos->x = pos.x * M2P - _gamePos->w / 2.0f;
@@ -33,6 +44,11 @@ void GraphicBody::setPhysicPosition(b2Vec2 pos, float angle)
 void GraphicBody::draw(SDL_Renderer* render, SDL_Texture* tex)
 {
 	SDL_RenderCopyEx(render,tex,_tilePos,_gamePos,_angle,NULL,SDL_FLIP_NONE);
+}
+
+void GraphicBody::drawWithAddedTex(SDL_Renderer* renderer)
+{
+	SDL_RenderCopyEx(renderer, _tex, _tilePos, _gamePos, _angle, NULL, SDL_FLIP_NONE);
 }
 
 

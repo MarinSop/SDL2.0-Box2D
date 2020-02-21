@@ -20,7 +20,7 @@ int main(int argc, char* args[])
 	Game game(render);
 	while (game.isRunning)
 	{
-		game.update(window);
+		game.update(window,render);
 		SDL_SetRenderDrawColor(render, 135, 206, 250, 255);
 		SDL_RenderClear(render);
 		game.render(render);

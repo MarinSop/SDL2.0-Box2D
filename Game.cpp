@@ -7,7 +7,7 @@ Game::Game(SDL_Renderer* renderer)
 	_contactListener = new MyContactListener();
 	_world->SetContactListener(_contactListener);
 	_map = new Map();
-	_map->load(_world,renderer);
+	_map->load(_world,renderer,std::to_string(_currentLevel));
 	_player = new Player(_world,renderer,"textures\\player.png",_map->startingPos);
 	_mouseControls = new MouseControls();
 	
@@ -18,13 +18,15 @@ Game::Game(SDL_Renderer* renderer)
 
 }
 
-void Game::update(SDL_Window* window)
+void Game::update(SDL_Window* window,SDL_Renderer* renderer)
 {
 	EventHandler(window);
 	_mouseControls->moveBody(_map->getDynamicBodies());
 	_world->Step(1/60.0f,8,3);
 	_player->update();
 	_map->update(*_player);
+	reset();
+	nextLevel(renderer);
 }
 
 void Game::render(SDL_Renderer* renderer)
@@ -34,6 +36,30 @@ void Game::render(SDL_Renderer* renderer)
 	
 }
 
+
+void Game::reset()
+{
+	if (_player->getPosition().y > 24 * 32)
+	{
+		_map->reset();
+		_player->setPosition(b2Vec2(_map->startingPos.x*32,_map->startingPos.y*32), 0);
+	}
+}
+
+void Game::nextLevel(SDL_Renderer* renderer)
+{
+	if (_map->getFinishPos()->x < _player->getBodyPosition().x * M2P &&
+		_map->getFinishPos()->x + _map->getFinishPos()->w > _player->getBodyPosition().x* M2P &&
+		_map->getFinishPos()->y < _player->getBodyPosition().y * M2P &&
+		_map->getFinishPos()->y + _map->getFinishPos()->h > _player->getBodyPosition().y* M2P)
+	{
+	   ++_currentLevel;
+		delete _map;
+		_map = new Map();
+	    _map->load(_world,renderer,std::to_string(_currentLevel));
+	    _player->setPosition(_map->startingPos,0);
+	}
+}
 
 void Game::EventHandler(SDL_Window* window)
 {

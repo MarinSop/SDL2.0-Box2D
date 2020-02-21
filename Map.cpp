@@ -7,16 +7,45 @@ Map::Map()
 
 Map::~Map()
 {
-      
+	for (int i = 0; i < _static.size(); ++i)
+	{
+		delete _static[i];
+	}
+	_static.clear();
+	for (int i = 0; i < _barrier.size(); ++i)
+	{
+		delete _barrier[i];
+	}
+	_barrier.clear();
+	for (int i = 0; i < _dynamic.size(); ++i)
+	{
+		delete _dynamic[i];
+	}
+	_dynamic.clear();
+	for (int i = 0; i < _teleporter.size(); ++i)
+	{
+		delete _teleporter[i];
+	}
+	_teleporter.clear();
+	delete _finish;
+	delete _tilemap;
+	_barrierStr.clear();
+	_groundStr.clear();
 }
 
-bool Map::load(b2World* world, SDL_Renderer* renderer)
+bool Map::load(b2World* world, SDL_Renderer* renderer,std::string fileNum)
 {
 	_world = world;
 	_renderer = renderer;
+	std::string pathInStr = "maps\\" + fileNum + ".tmx";
+	const char* path = pathInStr.c_str();
 	//loading tmx file
-	if (doc.LoadFile("maps\\level.tmx")) return XML_ERROR_FILE_READ_ERROR;
+	if (doc.LoadFile(const_cast<const char*>(path))) return XML_ERROR_FILE_READ_ERROR;
 	XMLElement* map = doc.FirstChildElement("map");
+	map->QueryIntAttribute("width", &_mapSize.x);
+	map->QueryIntAttribute("height", &_mapSize.y);
+	map->QueryIntAttribute("tilewidth", &_tileSize.x);
+	map->QueryIntAttribute("tileheight", &_tileSize.y);
 	XMLElement* layer = map->FirstChildElement("layer");
 	if (map == nullptr || layer == nullptr) return XML_ERROR_PARSING;
 	while (layer != nullptr)
@@ -140,8 +169,15 @@ bool Map::load(b2World* world, SDL_Renderer* renderer)
 				}
 				if (name == "Teleporter")
 				{
-					_teleporter.push_back(new Teleporter(renderer, b2Vec2(w, h), b2Vec2(x, y), b2Vec2(32, 32), id, teleportPos,
+					_teleporter.push_back(new Teleporter(renderer, b2Vec2(w, h), b2Vec2(x, y), b2Vec2(_tileSize.x,_tileSize.y), id, teleportPos,
 						"textures\\tilemap.png"));
+				}
+				else if (name == "Finish")
+				{
+					_finish = new GraphicBody();
+					SDL_Point size = { w,h };
+					_finish->addGraphics(renderer, size, b2Vec2(x, y), _tileSize, id);
+					_finish->addTexture(renderer);
 				}
 			}
 
@@ -160,29 +196,54 @@ bool Map::load(b2World* world, SDL_Renderer* renderer)
 void Map::update(Player& player)
 {
 	//updating texture on bodies
-	for (int i = 0; i < _dynamic.size(); i++)
+	if (_dynamic.empty() == false)
 	{
-		_dynamic[i]->update();
+		for (int i = 0; i < _dynamic.size(); i++)
+		{
+			_dynamic[i]->update();
+		}
 	}
-	for (int i = 0; i < _teleporter.size(); i++)
+	if (_teleporter.empty() == false)
 	{
-		_teleporter[i]->update(player);
+		for (int i = 0; i < _teleporter.size(); i++)
+		{
+			_teleporter[i]->update(player);
+		}
 	}
 }
 
 void Map::draw(SDL_Renderer* renderer)
 {
 	//drawing textures of bodies
-	_tilemap->draw(renderer);
-	for (int i = 0; i < _dynamic.size(); i++)
+	if(_tilemap != nullptr) _tilemap->draw(renderer);
+	if (_dynamic.empty() == false)
 	{
-		_dynamic[i]->draw(renderer);
+		for (int i = 0; i < _dynamic.size(); i++)
+		{
+			_dynamic[i]->draw(renderer);
+		}
 	}
-	for (int i = 0; i < _teleporter.size(); i++)
+	if (_teleporter.empty() == false)
 	{
-		_teleporter[i]->draw(renderer);
+		for (int i = 0; i < _teleporter.size(); i++)
+		{
+			_teleporter[i]->draw(renderer);
+		}
+	}
+	if (_finish != nullptr)
+	{
+		_finish->drawWithAddedTex(renderer);
 	}
 }
+
+void Map::reset()
+{
+	for (int i = 0; i < _dynamic.size(); ++i)
+	{
+		_dynamic[i]->reset();
+	}
+}
+
 
 std::vector<Body*> Map::getDynamicBodies()
 {
@@ -192,6 +253,11 @@ std::vector<Body*> Map::getDynamicBodies()
 std::vector<Body*> Map::getBarrierBodies()
 {
 	return _barrier;
+}
+
+SDL_Rect* Map::getFinishPos()
+{
+	return _finish->getGamePos();
 }
 
 

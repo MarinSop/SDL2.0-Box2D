@@ -5,6 +5,8 @@ Body::Body(b2World* world, SDL_Renderer* renderer, b2Vec2 pos, b2Vec2 size, Body
 {
 	_ID = id;
 	_type = type;
+	_startingPos = pos;
+	_size = size;
 	_physicBody = new PhysicBody();
 	_freezeTimer = new SDL_Rect();
 	if (texPath != NULL)
@@ -39,7 +41,9 @@ Body::~Body()
 {
 	delete _graphicBody;
 	delete _physicBody;
-	delete _bodyTexture;
+	SDL_DestroyTexture(_bodyTexture);
+	_bodyTexture = nullptr;
+	delete _freezeTimer;
 }
 
 void Body::update()
@@ -90,6 +94,19 @@ void Body::draw(SDL_Renderer* renderer)
 		SDL_SetRenderDrawColor(renderer, 126, 192, 238, 255);
 		SDL_RenderFillRect(renderer,_freezeTimer);
 	}
+}
+
+void Body::reset()
+{
+	_physicBody->getBody()->SetTransform(b2Vec2(_startingPos.x*P2M+(_size.x/2)*P2M,
+		_startingPos.y*P2M),0);
+	used = false;
+	held = false;
+	isFrozen = false;
+	_timerStart = false;
+	_physicBody->getBody()->SetType(b2_dynamicBody);
+	_physicBody->getBody()->SetFixedRotation(false);
+
 }
 
 SDL_Rect* Body::getGraphicsBodyPosition()
