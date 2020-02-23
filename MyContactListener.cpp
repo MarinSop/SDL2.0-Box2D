@@ -8,12 +8,12 @@ void MyContactListener::BeginContact(b2Contact* contact)
 	if (static_cast<char const*>(fixtureA->GetUserData()) == "foot")
 	{
 		++numFootContact;
-		std::cout << numFootContact << " A" << std::endl;
+	//	std::cout << numFootContact << " A" << std::endl;
 	}
 	if (static_cast<char const*>(fixtureB->GetUserData()) == "foot")
 	{
 		++numFootContact;
-		std::cout << numFootContact << " B " << std::endl;
+	//	std::cout << numFootContact << " B " << std::endl;
 	
 	}
 
@@ -27,11 +27,11 @@ void MyContactListener::EndContact(b2Contact* contact)
 	if (static_cast<char const*>(fixtureA->GetUserData()) == "foot")
 	{
 		--numFootContact;
-		std::cout << numFootContact << " A" << std::endl;
+	//	std::cout << numFootContact << " A" << std::endl;
 	}
 	if (static_cast<char const*>(fixtureB->GetUserData()) == "foot")
 	{
 		--numFootContact;
-		std::cout << numFootContact << " B " << std::endl;
+	//	std::cout << numFootContact << " B " << std::endl;
 	}
 }

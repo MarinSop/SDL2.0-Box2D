@@ -4,6 +4,8 @@ Tilemap::Tilemap(SDL_Renderer* renderer,int width,int height,int tileWidth,int t
 ,std::string ground, std::string barrier)
 	:_width(width),_height(height)
 {
+	_tilePos = new SDL_Rect();
+	_screenPos = new SDL_Rect();
 	//loading tilemap texture
 	SDL_Surface* surface = IMG_Load(path);
 	_tilemapTexture = SDL_CreateTextureFromSurface(renderer,surface);
@@ -59,6 +61,8 @@ Tilemap::~Tilemap()
 	_tiles.clear();
 	_ground.clear();
 	_barrier.clear();
+	delete _screenPos;
+	delete _tilePos;
 }
 
 void Tilemap::create(SDL_Renderer* renderer)
@@ -118,7 +122,15 @@ void Tilemap::draw(SDL_Renderer* renderer)
 	for (int i = 0; i < _tiles.size(); i++)
 	{
 		//_tiles[i]->cout();
-		SDL_RenderCopyEx(renderer, _tilemapTexture, _tiles[i]->tilePos, _tiles[i]->screenPos,0,NULL,SDL_FLIP_NONE);
+		_tilePos->x = _tiles[i]->tilePos.x;
+		_tilePos->y = _tiles[i]->tilePos.y;
+		_tilePos->w = _tiles[i]->tileSize.x;
+		_tilePos->h = _tiles[i]->tileSize.y;
+		_screenPos->x = _tiles[i]->screenPos.x;
+		_screenPos->y = _tiles[i]->screenPos.y;
+		_screenPos->w = _tiles[i]->tileSize.x;
+		_screenPos->h = _tiles[i]->tileSize.y;
+		SDL_RenderCopyEx(renderer, _tilemapTexture, _tilePos ,_screenPos,0,NULL,SDL_FLIP_NONE);
 	}
 }
 

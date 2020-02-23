@@ -27,9 +27,9 @@ void GraphicBody::addGraphics(SDL_Renderer* renderer, SDL_Point size, b2Vec2 pos
 	_tilePos->h = tileSize.y;
 }
 
-void GraphicBody::addTexture(SDL_Renderer* renderer)
+void GraphicBody::addTexture(SDL_Renderer* renderer,const char* path)
 {
-	SDL_Surface* surface = IMG_Load("textures\\tilemap.png");
+	SDL_Surface* surface = IMG_Load(path);
 	_tex = SDL_CreateTextureFromSurface(renderer,surface);
 	SDL_FreeSurface(surface);
 }

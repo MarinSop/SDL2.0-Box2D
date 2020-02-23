@@ -176,8 +176,8 @@ bool Map::load(b2World* world, SDL_Renderer* renderer,std::string fileNum)
 				{
 					_finish = new GraphicBody();
 					SDL_Point size = { w,h };
-					_finish->addGraphics(renderer, size, b2Vec2(x, y), _tileSize, id);
-					_finish->addTexture(renderer);
+					_finish->addGraphics(renderer, size, b2Vec2(x, y-32), _tileSize, id);
+					_finish->addTexture(renderer,"textures\\tilemap.png");
 				}
 			}
 
@@ -186,10 +186,10 @@ bool Map::load(b2World* world, SDL_Renderer* renderer,std::string fileNum)
 		}
 		objectgroup = objectgroup->NextSiblingElement("objectgroup");
 
-		_tilemap = new Tilemap(renderer,_mapSize.x,_mapSize.y,_tileSize.x,_tileSize.y,"textures\\tilemap.png",_groundStr,_barrierStr);
-		_tilemap->create(renderer);
 	}
-
+	_tilemap = new Tilemap(renderer,_mapSize.x,_mapSize.y,_tileSize.x,_tileSize.y,"textures\\tilemap.png",_groundStr,_barrierStr);
+	_tilemap->create(renderer);
+	_enemy.push_back(new Enemy(renderer, world));
 	return true;
 }
 
@@ -198,16 +198,23 @@ void Map::update(Player& player)
 	//updating texture on bodies
 	if (_dynamic.empty() == false)
 	{
-		for (int i = 0; i < _dynamic.size(); i++)
+		for (int i = 0; i < _dynamic.size(); ++i)
 		{
 			_dynamic[i]->update();
 		}
 	}
 	if (_teleporter.empty() == false)
 	{
-		for (int i = 0; i < _teleporter.size(); i++)
+		for (int i = 0; i < _teleporter.size(); ++i)
 		{
 			_teleporter[i]->update(player);
+		}
+	}
+	if (_enemy.empty() == false)
+	{
+		for (int i = 0; i < _enemy.size(); ++i)
+		{
+			_enemy[i]->update(&player);
 		}
 	}
 }
@@ -233,6 +240,13 @@ void Map::draw(SDL_Renderer* renderer)
 	if (_finish != nullptr)
 	{
 		_finish->drawWithAddedTex(renderer);
+	}
+	if (_enemy.empty() == false)
+	{
+		for (int i = 0; i < _enemy.size(); i++)
+		{
+			_enemy[i]->draw(renderer);
+		}
 	}
 }
 

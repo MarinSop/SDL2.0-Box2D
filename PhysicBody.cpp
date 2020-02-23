@@ -6,7 +6,7 @@ PhysicBody::PhysicBody()
 
 PhysicBody::~PhysicBody()
 {
-	_world->DestroyBody(_body);
+	_body->GetWorld()->DestroyBody(_body);
 }
 
 b2Body* PhysicBody::addRectBody(b2World* world, b2Vec2 pos, b2Vec2 size, BodyType type, bool isSensor,

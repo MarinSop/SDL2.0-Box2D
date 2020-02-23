@@ -12,7 +12,7 @@ public:
 	GraphicBody();
 	~GraphicBody();
 	void addGraphics(SDL_Renderer* renderer, SDL_Point size, b2Vec2 pos, SDL_Point tileSize, int id);
-	void addTexture(SDL_Renderer* renderer);
+	void addTexture(SDL_Renderer* renderer, const char* path);
 	void setPhysicPosition(b2Vec2 pos, float angle);
 	void draw(SDL_Renderer* render, SDL_Texture* tex);
 	void drawWithAddedTex(SDL_Renderer* renderer);

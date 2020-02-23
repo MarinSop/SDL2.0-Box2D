@@ -21,7 +21,7 @@ public:
 private:
 
 	b2World* _world;
-	b2Vec2 _gravity = b2Vec2(0.0f,0.5f);
+	b2Vec2 _gravity = b2Vec2(0.0f,1.0f);
 
 	bool hold = false;
 	int _currentLevel = 1;

@@ -2,6 +2,7 @@
 #include "tinyxml2.h"
 #include "box2d/box2d.h"
 #include "Body.h"
+#include "Enemy.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -39,6 +40,7 @@ private:
 	std::vector<Body*> _dynamic;
 	std::vector<Body*> _barrier;
 	std::vector<Teleporter*> _teleporter;
+	std::vector<Enemy*> _enemy;
 	GraphicBody* _finish;
 	std::string _barrierStr;
 	std::string _groundStr;

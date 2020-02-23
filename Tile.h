@@ -7,11 +7,10 @@ class Tile
 public:
 	Tile(SDL_Point tilesize,int id,SDL_Point screenpos);
 	~Tile();
-	  
-	void cout();
 
 	int ID;
-	SDL_Rect* screenPos;
-	SDL_Rect* tilePos;
+	SDL_Point screenPos;
+	SDL_Point tilePos;
+	SDL_Point tileSize;
 };
 

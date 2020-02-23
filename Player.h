@@ -29,7 +29,7 @@ private:
 	SDL_Texture* _playerTexture;
 	float _dragForce = 0.5f;
 	float _jumpHeight = 150.0f;
-	float _moveSpeed = 0.5f;
+	float _moveSpeed = 1.0f;
 	b2World* _world;
 	SDL_Rect rect;
 

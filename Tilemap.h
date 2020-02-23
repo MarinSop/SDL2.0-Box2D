@@ -21,6 +21,9 @@ private:
 	SDL_Texture* _tilemapTexture;
 
 	std::vector<Tile*> _tiles;
+	SDL_Rect* _screenPos;
+	SDL_Rect* _tilePos;
+
 	std::vector<int> _ground;
 	std::vector<int> _barrier;
 };

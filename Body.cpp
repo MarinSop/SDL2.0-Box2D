@@ -50,23 +50,27 @@ void Body::update()
 {
 	if (isFrozen == true)
 	{
-		_physicBody->getBody()->SetLinearVelocity(b2Vec2(0,0));
+		float current = SDL_GetTicks();
 		if (_timerStart == false)
 		{
-			_timerStartPos = SDL_GetTicks() + 5000;
+			_timerStartPos = current+5000;
 			_timerStart = true;
+			_physicBody->getBody()->SetType(b2_staticBody);
 		}
-		float current = SDL_GetTicks();
-		_freezeTimer->w = abs(current - _timerStartPos) / _timerStartPos * _startFreezeTimerWidth;
-	//	std::cout << abs(current - _timerStartPos) / _timerStartPos * _startFreezeTimerWidth << std::endl;
-		
-		_physicBody->getBody()->SetType(b2_staticBody);
-		if (current > _timerStartPos)
+		else
 		{
-			_physicBody->getBody()->SetType(b2_dynamicBody);
-			isFrozen = false;
-			used = true;
+			_freezeTimer->w = ((_timerStartPos - current) / 5000) * _startFreezeTimerWidth;
+			if (current > _timerStartPos)
+			{
+				_physicBody->getBody()->SetType(b2_dynamicBody);
+				isFrozen = false;
+				used = true;
+				_timerStart = false;
+			}
 		}
+		_freezeTimer->x = _graphicBody->getGamePos()->x;
+		_freezeTimer->y = _graphicBody->getGamePos()->y - 15;
+		_physicBody->getBody()->SetLinearVelocity(b2Vec2(0,0));
 	}
 	else if (held == true && isFrozen == false)
 	{
@@ -79,11 +83,6 @@ void Body::update()
 	}
 	//	std::cout << _physicBody->getBody()->GetLinearVelocity().x << "   " << _physicBody->getBody()->GetLinearVelocity().y << std::endl;
 	_graphicBody->setPhysicPosition(_physicBody->getBody()->GetPosition(),_physicBody->getBody()->GetAngle());
-	if (isFrozen == true)
-	{
-		_freezeTimer->x = _graphicBody->getGamePos()->x;
-		_freezeTimer->y = _graphicBody->getGamePos()->y - 15;
-	}
 }
 
 void Body::draw(SDL_Renderer* renderer)
